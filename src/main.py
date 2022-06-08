@@ -1,46 +1,56 @@
-#Password Generator Project
-import random
-letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+#Delete this line: word_list = ["ardvark", "baboon", "camel"]
+from hangman_words import word_list
 
-print("Welcome to the PyPassword Generator!")
-nr_letters = int(input("How many letters would you like in your password?\n")) 
-nr_symbols = int(input(f"How many symbols would you like?\n"))
-nr_numbers = int(input(f"How many numbers would you like?\n"))
+chosen_word = random.choice(word_list)
+word_length = len(chosen_word)
 
-#Eazy Level
-# password = ""
+end_of_game = False
+lives = 6
 
-# for char in range(1, nr_letters + 1):
-#   password += random.choice(letters)
+#TODO-3: - Import the logo from hangman_art.py and print it at the start of the game.
+from hangman_art import logo
+print(logo)
 
-# for char in range(1, nr_symbols + 1):
-#   password += random.choice(symbols)
+#Testing code
+print(f'Pssst, the solution is {chosen_word}.')
 
-# for char in range(1, nr_numbers + 1):
-#   password += random.choice(numbers)
+#Create blanks
+display = []
+for _ in range(word_length):
+    display += "_"
 
-# print(password)
+while not end_of_game:
+    guess = input("Guess a letter: ").lower()
 
-#Hard Level
-password_list = []
+    #TODO-4: - If the user has entered a letter they've already guessed, print the letter and let them know.
+    if guess in display:
+        print(f"You've already guessed {guess}")
 
-for char in range(1, nr_letters + 1):
-  password_list.append(random.choice(letters))
+    #Check guessed letter
+    for position in range(word_length):
+        letter = chosen_word[position]
+        #print(f"Current position: {position}\n Current letter: {letter}\n Guessed letter: {guess}")
+        if letter == guess:
+            display[position] = letter
 
-for char in range(1, nr_symbols + 1):
-  password_list += random.choice(symbols)
+    #Check if user is wrong.
+    if guess not in chosen_word:
+        #TODO-5: - If the letter is not in the chosen_word, print out the letter and let them know it's not in the word.
+        print(f"You guessed {guess}, that's not in the word. You lose a life.")
+        
+        lives -= 1
+        if lives == 0:
+            end_of_game = True
+            print("You lose.")
 
-for char in range(1, nr_numbers + 1):
-  password_list += random.choice(numbers)
+    #Join all the elements in the list and turn it into a String.
+    print(f"{' '.join(display)}")
 
+    #Check if user has got all letters.
+    if "_" not in display:
+        end_of_game = True
+        print("You win.")
 
-random.shuffle(password_list)
-
-
-password = ""
-for char in password_list:
-  password += char
-
-print(f"Your password is: {password}")
+    #TODO-2: - Import the stages from hangman_art.py and make this error go away.
+    from hangman_art import stages
+    print(stages[lives])
