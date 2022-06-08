@@ -1,56 +1,47 @@
-#Delete this line: word_list = ["ardvark", "baboon", "camel"]
-from hangman_words import word_list
+#calculator
+from replit import clear
+from art import logo
 
-chosen_word = random.choice(word_list)
-word_length = len(chosen_word)
 
-end_of_game = False
-lives = 6
+def add(n1, n2):
+    return(n1 + n2)
+def multiply(n1, n2):
+    return(n1 * n2)
+def subtract(n1, n2):
+    return(n1 - n2)
+def divide(n1, n2):
+    return(n1 / n2)
 
-#TODO-3: - Import the logo from hangman_art.py and print it at the start of the game.
-from hangman_art import logo
-print(logo)
+operations = {
+"+": add,
+"*": multiply,
+"-": subtract,
+"/": divide
+}
+def calculator():
+    print(logo)
+    num1 = float(input("What would you like the first number to be? "))
+    for symbol in operations:
+        print(symbol)
 
-#Testing code
-print(f'Pssst, the solution is {chosen_word}.')
+    keep_going = True
+    while keep_going:
+        operation_symbol = input("What operation would you like to perform? ")
+        num2 = float(input("What would you like the next number to be? "))
+        equation = operations[operation_symbol]
+        answer = equation(num1, num2)
+        print(f"{num1} {operation_symbol} {num2} = {answer}")
+        input_var = input(f"Type 'y' to contiue calculating with {answer}, or type 'n' to zero. ") 
+        if input_var == "y":
+            clear()
+            print(logo)
+            print(answer)
+            num1 = answer
+        elif input_var == "n":
+            clear()
+            calculator()
+        else:
+            print("Invalid input")
+            
 
-#Create blanks
-display = []
-for _ in range(word_length):
-    display += "_"
-
-while not end_of_game:
-    guess = input("Guess a letter: ").lower()
-
-    #TODO-4: - If the user has entered a letter they've already guessed, print the letter and let them know.
-    if guess in display:
-        print(f"You've already guessed {guess}")
-
-    #Check guessed letter
-    for position in range(word_length):
-        letter = chosen_word[position]
-        #print(f"Current position: {position}\n Current letter: {letter}\n Guessed letter: {guess}")
-        if letter == guess:
-            display[position] = letter
-
-    #Check if user is wrong.
-    if guess not in chosen_word:
-        #TODO-5: - If the letter is not in the chosen_word, print out the letter and let them know it's not in the word.
-        print(f"You guessed {guess}, that's not in the word. You lose a life.")
-        
-        lives -= 1
-        if lives == 0:
-            end_of_game = True
-            print("You lose.")
-
-    #Join all the elements in the list and turn it into a String.
-    print(f"{' '.join(display)}")
-
-    #Check if user has got all letters.
-    if "_" not in display:
-        end_of_game = True
-        print("You win.")
-
-    #TODO-2: - Import the stages from hangman_art.py and make this error go away.
-    from hangman_art import stages
-    print(stages[lives])
+calculator()
